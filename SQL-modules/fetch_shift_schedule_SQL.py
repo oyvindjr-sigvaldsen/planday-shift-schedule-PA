@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(absolute_path))
 
 import retrieve_shift_schedule_planday as rssp
 
-def main():
+def main(path_db):
 
 	def fetch_shift_schedule(path_db):
 
@@ -44,9 +44,9 @@ def main():
 				sqlite_connection.close()
 				print("The SQLite3 connection is closed")
 
-	monthly_shift_schedule = fetch_shift_schedule("../planday_shift_schedule_PA.db")
+	monthly_shift_schedule = fetch_shift_schedule(path_db)
 
 	return monthly_shift_schedule
 
 if __name__ == "__main__":
-	main()
+	main(path_db)
