@@ -3,7 +3,7 @@
 # imports
 from selenium import webdriver
 import numpy as np
-import sqlite3, re
+import sqlite3, re, datetime
 
 def main():
 
@@ -80,25 +80,43 @@ def main():
 										shift_department,
 										shift_group,
 										shift_function,
-										shift_time_frame
+										re.findall(r'\d+', shift_time_frame) # seperate time frame into ["00", "30"] -> ["hr", "min"]
 									]
 
 				shifts.append(shift_information)
 
 		return shifts
 
-	#monthly_shift_schedule = retrieve_shift_schedule(driver)
-	#print(monthly_shift_schedule)
+	def assimilate_retrieved_info(shift_schedule):
 
-	months = driver.find_elements_by_class_name("nav_blue_month")
-	print(len(months))
+		for i in range(len(shift_schedule)):
 
-	months[1].click()
+			shift = shift_schedule[i]
 
-	anchor = driver.find_elements_by_tag_name("p")
-	for a in anchor:
-		print(a)
+			# modify shift_time_frame from [hr, min] -> [0000]
+			shift_time_frame = [
+								shift[4][0] + shift[4][1],
+								shift[4][2] + shift[4][3]
+								]
 
+			# assimilate date records
+			now = datetime.datetime.today()
+			shift_date = datetime.datetime(
+												int(shift[0][1]),
+												now.month,
+												int(shift[0][0])
+											)
+
+			# replace all assimilated records
+			shift_schedule[i][0] = shift_date
+			shift_schedule[i][4] = shift_time_frame
+
+		return shift_schedule
+
+	shift_schedule = retrieve_shift_schedule(driver)
+	monthly_shift_schedule = assimilate_retrieved_info(shift_schedule)
+
+	return monthly_shift_schedule
 
 if __name__ == "__main__":
 	main()
