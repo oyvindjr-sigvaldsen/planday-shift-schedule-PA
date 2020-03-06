@@ -3,7 +3,7 @@
 # imports
 from selenium import webdriver
 import numpy as np
-import sqlite3, re, datetime
+import sqlite3, re, datetime, calendar
 
 def main():
 
@@ -69,6 +69,7 @@ def main():
 
 				child_elements = row_element.find_elements_by_tag_name("td")
 
+
 				shift_date = child_elements[0].text
 				shift_department = child_elements[1].text
 				shift_group = child_elements[2].text
@@ -107,9 +108,12 @@ def main():
 												int(shift[0][0])
 											)
 
+			shift_day = calendar.day_name[shift_date.weekday()]
+
 			# replace all assimilated records
 			shift_schedule[i][0] = shift_date
 			shift_schedule[i][4] = shift_time_frame
+			shift_schedule[i].insert(0, shift_day)
 
 		return shift_schedule
 

@@ -25,7 +25,7 @@ def main():
 				shift = monthly_shift_schedule[i]
 				print(shift)
 
-				cursor.execute("""INSERT OR IGNORE INTO monthly_shift_schedule VALUES(?, ?, ?, ?, ?, ?)""", (shift[0], shift[1], shift[2], shift[3], shift[4][0], shift[4][1]))
+				cursor.execute("""INSERT OR IGNORE INTO monthly_shift_schedule VALUES(?, ?, ?, ?, ?, ?, ?)""", (shift[0], shift[1], shift[2], shift[3], shift[4], shift[5][0], shift[5][1]))
 				sqlite_connection.commit()
 
 		except sqlite3.Error as error:
