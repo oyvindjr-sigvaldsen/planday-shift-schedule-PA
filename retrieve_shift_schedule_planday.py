@@ -45,13 +45,13 @@ def main():
 			print("Error: ", repr(error))
 			return False
 
-	username, password = retrieve_login_credentials("planday_shift_schedule_PA.db")
+	username, password = retrieve_login_credentials("../planday_shift_schedule_PA.db")
 	planday_schedule_URL = "https://ssk.planday.com/Pages/PortalPage.aspx?PageId=82487&nav=menu"
 
 	#chrome_options = Options()
 	#chrome_options.add_experimental_option("detach", True)
 
-	driver = webdriver.Chrome(executable_path="webdrivers/chromedriver_v80")
+	driver = webdriver.Chrome(executable_path="../webdrivers/chromedriver_v80")
 	login_planday(driver, planday_schedule_URL, username, password)
 
 	def retrieve_shift_schedule(driver):
