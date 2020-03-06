@@ -13,7 +13,7 @@ def main():
 			sqlite_connection = sqlite3.connect(path_db)
 			cursor = sqlite_connection.cursor()
 
-			cursor.execute("SELECT * FROM planday_login_credentials")
+			cursor.execute("SELECT * FROM planday_login_credentials;")
 			credentials = cursor.fetchall()
 			sqlite_connection.commit()
 
