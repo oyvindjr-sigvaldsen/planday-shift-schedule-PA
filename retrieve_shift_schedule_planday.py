@@ -45,7 +45,7 @@ def main():
 			print("Error: ", repr(error))
 			return False
 
-	username, password = retrieve_login_credentials("../shift_schedule_PA.db")
+	username, password = retrieve_login_credentials("planday_shift_schedule_PA.db")
 	planday_schedule_URL = "https://ssk.planday.com/Pages/PortalPage.aspx?PageId=82487&nav=menu"
 
 	#chrome_options = Options()
