@@ -40,7 +40,7 @@ def main():
 				print("The SQLite3 connection is closed")
 
 	monthly_shift_schedule = rssp.main()
-	push_shift_schedule("../planday_shift_schedule_PA.db", monthly_shift_schedule)
+	push_shift_schedule("planday_shift_schedule_PA.db", monthly_shift_schedule)
 
 if __name__ == "__main__":
 	main()

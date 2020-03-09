@@ -21,8 +21,8 @@ def main():
 
 		except sqlite3.Error as error:
 
-			print("Failed to fetch https://www.planday.com login credentials from sqlite3 .db")
-			return False
+			print("Failed to fetch https://www.planday.com login credentials from sqlite3 .db ERROR: ", error)
+			return False, error
 
 		finally:
 			if (sqlite_connection):
@@ -45,13 +45,13 @@ def main():
 			print("Error: ", repr(error))
 			return False
 
-	username, password = retrieve_login_credentials("../planday_shift_schedule_PA.db")
+	username, password = retrieve_login_credentials("planday_shift_schedule_PA.db")
 	planday_schedule_URL = "https://ssk.planday.com/Pages/PortalPage.aspx?PageId=82487&nav=menu"
 
 	#chrome_options = Options()
 	#chrome_options.add_experimental_option("detach", True)
 
-	driver = webdriver.Chrome(executable_path="../webdrivers/chromedriver_v80")
+	driver = webdriver.Chrome(executable_path="webdrivers/chromedriver_v80")
 	login_planday(driver, planday_schedule_URL, username, password)
 
 	def retrieve_shift_schedule(driver):
@@ -72,15 +72,16 @@ def main():
 
 				shift_date = child_elements[0].text
 				shift_department = child_elements[1].text
-				shift_group = child_elements[2].text
 				shift_function = child_elements[3].text
 				shift_time_frame = child_elements[4].text
 
+				shift_group = (re.sub(r".*-", "-", shift_function)).lstrip(" - ")
+
 				shift_information = [
 										re.findall(r'\d+', shift_date), # extract all int() from string var
-										shift_department,
+										shift_department.replace("Avd.", ""),
 										shift_group,
-										shift_function,
+										(shift_function.replace(shift_group, "")).replace("-", ""),
 										re.findall(r'\d+', shift_time_frame) # seperate time frame into ["00", "30"] -> ["hr", "min"]
 									]
 
@@ -100,7 +101,7 @@ def main():
 								shift[4][2] + shift[4][3]
 								]
 
-			# assimilate date records
+			# assimilate scraped information
 			now = datetime.datetime.today()
 			shift_date = datetime.datetime(
 												int(shift[0][1]),
@@ -110,7 +111,7 @@ def main():
 
 			shift_day = calendar.day_name[shift_date.weekday()]
 
-			# replace all assimilated records
+			# replace existing records with assimilated records
 			shift_schedule[i][0] = shift_date
 			shift_schedule[i][4] = shift_time_frame
 			shift_schedule[i].insert(0, shift_day)
